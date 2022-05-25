@@ -1,0 +1,18 @@
+Speed Theory E-commerce application 
+
+Libraries:
+- express (nodejs backend)
+- mongoose (mongoDB database)
+- dotenv (for separating secrets from source code in .env files)
+- nodemon (helps restart node server when change are detected)
+
+development setup:
+- add nodemon to package.json, and run yarn start to activate nodemon
+
+Project description:
+This will be an e-commerce webapp  that aims to serve as a replacement for the 
+current application http://www.speedtheory.ca/locations/vancouver/ utilized by
+speedtheory, a vancouver based cycling and triathlon store. 
+
+This new application will use MongoDB, Express, React, and Node for development.
+
