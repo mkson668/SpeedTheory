@@ -3,6 +3,8 @@
 const express = require("express");
 const router = express.Router();
 
+/* 
+// for testing purposes
 router.get("/usertest", (req, res) => {
     res.send("user test successful");
 });
@@ -12,5 +14,8 @@ router.post("/userposttest", (req, res) => {
     console.log(username);
     res.send("username: " + username);
 });
+ */
+
+
 
 module.exports = router
