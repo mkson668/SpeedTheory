@@ -12,7 +12,8 @@ router.post("/register", (req, res) => {
         {
             username: req.body.username,
             email: req.body.email,
-            password: CryptoJS.AES.encrypt( req.body.password, process.env.PASSWORD_SECRET),
+            // enable encryption using crypto-js
+            password: CryptoJS.AES.encrypt( req.body.password, process.env.PASSWORD_SECRET).toString(),
         }
     )
 
@@ -27,6 +28,30 @@ router.post("/register", (req, res) => {
         console.log("user has NOT been added error code: " + error);
         res.status(500).json(error);
     })
+});
+
+// login
+router.post("/login", (req, res) => {
+
+    // review: for all async functions they will always return a promise
+    User.findOne({ username: req.body.username }).then((result) => {
+        console.log("found in database: " + result);
+        if (!result) {
+            res.status(401).json("User does not exist");
+        } 
+        const hashedPassword = CryptoJS.AES.decrypt(result.password, process.env.PASSWORD_SECRET);
+        console.log("this is hashedPW: " + hashedPassword);
+        const password = hashedPassword.toString(CryptoJS.enc.Utf8);
+        console.log("this is unhashPW: " + password);
+        if (password != req.body.password) {
+            res.status(401).json("incorrect user password");
+        } else {
+            res.status(200).json("user has " + req.body.username + " logged in: " + result)
+        }
+    }).catch((error) => {
+        console.log("error has occured: " + require);
+        res.status(500).json(error);
+    });
 });
 
 module.exports = router
