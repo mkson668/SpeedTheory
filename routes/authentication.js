@@ -41,9 +41,10 @@ router.post("/login", (req, res) => {
             res.status(401).json("User does not exist");
         } 
         const hashedPassword = CryptoJS.AES.decrypt(result.password, process.env.PASSWORD_SECRET);
-        console.log("this is hashedPW: " + hashedPassword);
+        // console.log("this is hashedPW: " + hashedPassword);
+
         const unhashedPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
-        console.log("this is unhashPW: " + unhashedPassword);
+        // console.log("this is unhashPW: " + unhashedPassword);
 
         if (unhashedPassword != req.body.password) {
             res.status(401).json("incorrect user password");
@@ -59,8 +60,9 @@ router.post("/login", (req, res) => {
             });
             // we should not expose password to browser so destructure it using JS
             const {password, ...others} = result._doc;
+            
             // wrap accessToken in object to return it
-            res.status(200).json({others, accessToken});
+            res.status(200).json({...others, accessToken});
         }
     }).catch((error) => {
         console.log("error has occured: " + require);
