@@ -6,6 +6,7 @@ Libraries:
 - dotenv (for separating secrets from source code in .env files)
 - nodemon (helps restart node server when change are detected)
 - crypto-js for encrypting passwords
+- JWT (json web token)
 
 development setup:
 - add nodemon to package.json, and run yarn start to activate nodemon

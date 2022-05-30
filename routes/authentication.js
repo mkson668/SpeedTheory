@@ -1,8 +1,9 @@
 // setup express router
 const express = require("express");
 const router = express.Router();
-const User = require("../models/User")
-const CryptoJS = require("crypto-js")
+const User = require("../models/User");
+const CryptoJS = require("crypto-js");
+const jwt = require("jsonwebtoken");
 
 // register
 router.post("/register", (req, res) => {
@@ -41,12 +42,25 @@ router.post("/login", (req, res) => {
         } 
         const hashedPassword = CryptoJS.AES.decrypt(result.password, process.env.PASSWORD_SECRET);
         console.log("this is hashedPW: " + hashedPassword);
-        const password = hashedPassword.toString(CryptoJS.enc.Utf8);
-        console.log("this is unhashPW: " + password);
-        if (password != req.body.password) {
+        const unhashedPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
+        console.log("this is unhashPW: " + unhashedPassword);
+
+        if (unhashedPassword != req.body.password) {
             res.status(401).json("incorrect user password");
         } else {
-            res.status(200).json("user has " + req.body.username + " logged in: " + result)
+            // create JWT for user verifications after login (sync)
+            // https://github.com/auth0/node-jsonwebtoken
+            const accessToken = jwt.sign({
+                id: result._id,
+                isAdmin: result.isAdmin
+            }, process.env.JWT_SECRET,
+            {
+                expiresIn: '10h'
+            });
+            // we should not expose password to browser so destructure it using JS
+            const {password, ...others} = result._doc;
+            // wrap accessToken in object to return it
+            res.status(200).json({others, accessToken});
         }
     }).catch((error) => {
         console.log("error has occured: " + require);
