@@ -13,7 +13,7 @@ const verifyToken = (req, res, next) => {
             }
             req.user = data;
             // next() simply means continue in the original function you called this function from
-            next();
+            return next();
         });
     } else {
         return res.status(401).json("you are not authenticated");
@@ -23,12 +23,23 @@ const verifyToken = (req, res, next) => {
 const verifyTokenAndAuthorization = (req, res, next) => {
     verifyToken(req, res, () => {
         if (req.user.id === req.params.id || req.user.isAdmin) {
-            // next() simply means continue in the original function you called this function from
-            next();
+            // next() simply means to jump out of the callback, back to original place you called it
+            return next();
         } else {
             res.status(403).json("authentication failed");
         }
     })
 }
 
-module.exports = {verifyToken, verifyTokenAndAuthorization};
+const verifyTokenAndAdmin = (req, res, next) => {
+    verifyToken(req, res, () => {
+        if (req.user.isAdmin) {
+            // next() simply means to jump out of the callback, back to original place you called it
+            return next();
+        } else {
+            res.status(403).json("authentication failed");
+        }
+    })
+}
+
+module.exports = {verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin};
