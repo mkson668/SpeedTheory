@@ -18,7 +18,7 @@ router.post("/userposttest", (req, res) => {
 });
  */
 
-// CREATE 
+// Update
 
 router.put("/:id", verifyTokenAndAuthorization, (req, res) => {
     // req.params.id is the supplied "/:id"
@@ -48,9 +48,10 @@ router.delete("/:id", verifyTokenAndAuthorization, (req, res) => {
     })
 })
 
-// READ 
+// READ  get one user
 
-router.get("/:id", verifyTokenAndAdmin, (req, res) => {
+// for testing set one user to isAdmin:true in database manually
+router.get("/find/:id", verifyTokenAndAdmin, (req, res) => {
     // only admin should be able to get all users
     User.findById(req.params.id).then((result) => {
 
@@ -58,7 +59,26 @@ router.get("/:id", verifyTokenAndAdmin, (req, res) => {
         const {password, ...others} = result._doc;
             
         // destructure cause mongo is wrap it in _doc
-        res.status(200).json({...others});
+        res.status(200).json(others);
+    }).catch((error) => {
+        res.status(500).json("user delete error: " + error);
+    })
+})
+
+// READ get al users
+
+// for testing set one user to isAdmin:true in database manually
+router.get("/findAll", verifyTokenAndAdmin, (req, res) => {
+    // only admin should be able to get all users
+    User.find().then((result) => {
+        const usersWOPassword = [];
+        for (const user of result) {
+            const {password, ...others} = user._doc;
+            usersWOPassword.push(others);
+        }
+            
+        // destructure cause mongo is wrap it in _doc
+        res.status(200).json(usersWOPassword);
     }).catch((error) => {
         res.status(500).json("user delete error: " + error);
     })
