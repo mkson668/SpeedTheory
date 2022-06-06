@@ -3,12 +3,6 @@ const mongoose = require("mongoose");
 // Documentation for creating schema https://mongoosejs.com/docs/api/schema.html
 const ProductSchema = new mongoose.Schema(
     {
-        productId: 
-        {
-            type: String,
-            required: true,
-            unique: true, 
-        },
         title: 
         {
             type: String, 
@@ -16,6 +10,11 @@ const ProductSchema = new mongoose.Schema(
             unique: true
         },
         description:
+        {
+            type: String,
+            required: true
+        },
+        size:
         {
             type: String,
             required: true
@@ -33,10 +32,12 @@ const ProductSchema = new mongoose.Schema(
         {
             // possibility that item belongs to multiple categories
             type: Array,
+            default: ["general"],
         },
         color: 
         {
             type: String,
+            default: "blank",
         }
     },
     {timestamps:true}

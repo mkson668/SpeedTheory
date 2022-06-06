@@ -4,7 +4,6 @@ const router = express.Router();
 const {verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin} = require("./verifyToken");
 const CryptoJS = require("crypto-js");
 const User = require("../models/User");
-const { route } = require("./authentication");
 
 /* 
 // for testing purposes
